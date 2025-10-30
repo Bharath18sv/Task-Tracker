@@ -10,6 +10,7 @@ const InsightsPanel = () => {
     try {
       setLoading(true);
       const response = await taskApi.getInsights();
+    //   console.log("insights reponse", response);
       setInsights(response.data);
     } catch (err) {
       setError("Failed to fetch insights");

@@ -10,17 +10,6 @@ const api = axios.create({
   timeout: 10000, // 10 second timeout
 });
 
-// Request interceptor
-api.interceptors.request.use(
-  (config) => {
-    // You can add auth tokens here if needed
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
 // Response interceptor
 api.interceptors.response.use(
   (response) => {
@@ -28,13 +17,10 @@ api.interceptors.response.use(
   },
   (error) => {
     if (error.response) {
-      // Server responded with error status
       console.error("API Error:", error.response.status, error.response.data);
     } else if (error.request) {
-      // Request was made but no response received
       console.error("Network Error:", error.request);
     } else {
-      // Something else happened
       console.error("Error:", error.message);
     }
     return Promise.reject(error);
@@ -45,10 +31,10 @@ export const taskApi = {
   // Get all tasks
   getTasks: (params = {}) => api.get("/tasks", { params }),
 
-  // Create a new task
+  // Create new task
   createTask: (taskData) => api.post("/tasks", taskData),
 
-  // Update a task
+  // Update task
   updateTask: (id, taskData) => api.patch(`/tasks/${id}`, taskData),
 
   // Get insights
