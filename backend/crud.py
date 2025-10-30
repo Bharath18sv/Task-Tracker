@@ -3,7 +3,7 @@ from models import Task, PriorityEnum, StatusEnum
 from schemas import TaskCreate, TaskUpdate
 from datetime import datetime, timedelta
 from collections import Counter
-from typing import List, Optional
+from typing import Optional
 
 def get_task(db: Session, task_id: int):
     return db.query(Task).filter(Task.id == task_id).first()
@@ -63,7 +63,7 @@ def get_task_insights(db: Session):
     # Busiest day calculation
     busiest_day = None
     if tasks:
-        # Count tasks by due date (date part only)
+        # Count tasks by due date with only date part
         date_counts = Counter()
         for task in tasks:
             if task.due_date:
@@ -71,15 +71,19 @@ def get_task_insights(db: Session):
                 date_counts[date_str] += 1
         
         if date_counts:
+            # get the date with higehst count
             busiest_day = date_counts.most_common(1)[0][0] if date_counts else None
     
-    # Generate summary
+    # Write summary with high priorty counts
     summary = f"You have {total_tasks} tasks"
     if total_tasks > 0:
         summary += f" — {high_priority_count} are High priority"
+
+        # append due soon count also
         if due_soon_count > 0:
             summary += f" and {due_soon_count} due soon"
         summary += "."
+        
     else:
         summary += "."
     
