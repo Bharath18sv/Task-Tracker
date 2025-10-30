@@ -5,7 +5,7 @@ import InsightsPanel from "./components/InsightsPanel";
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen bg-gray-50 p-4 pt-20">
       <div className="max-w-6xl mx-auto">
         <header className="mb-6 text-center">
           <h1 className="text-2xl font-semibold text-gray-800">Task Tracker</h1>
@@ -15,21 +15,17 @@ function App() {
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          {/* Left column - Task Form */}
+          {/*Task Form in the left*/}
           <div className="lg:col-span-1">
             <TaskForm />
           </div>
 
-          {/* Right column - Task List and Insights */}
+          {/*Task List and Insights in the right*/}
           <div className="lg:col-span-2 space-y-5">
             <InsightsPanel />
             <TaskList />
           </div>
         </div>
-
-        <footer className="mt-8 text-center text-gray-500 text-xs">
-          <p>Task Tracker © {new Date().getFullYear()}</p>
-        </footer>
       </div>
     </div>
   );
