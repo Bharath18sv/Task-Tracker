@@ -12,8 +12,10 @@ from models import StatusEnum, PriorityEnum
 
 router = APIRouter()
 
+# create new task, returns 422 if validation fails
 @router.post("/tasks", response_model=Task)
 def create_new_task(task: TaskCreate, db: Session = Depends(get_db)):
+    # call create task from crud
     return create_task(db=db, task=task)
 
 @router.get("/tasks", response_model=List[Task])

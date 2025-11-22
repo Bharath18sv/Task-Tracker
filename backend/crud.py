@@ -1,27 +1,35 @@
+# task controllers
 from sqlalchemy.orm import Session
-from models import Task, PriorityEnum, StatusEnum
+from models import Task, StatusEnum, PriorityEnum
 from schemas import TaskCreate, TaskUpdate
 from datetime import datetime, timedelta
 from collections import Counter
 from typing import Optional
 
+# get task by id
 def get_task(db: Session, task_id: int):
     return db.query(Task).filter(Task.id == task_id).first()
 
+# get all tasks 
 def get_tasks(db: Session, skip: int = 0, limit: int = 100, status: Optional[StatusEnum] = None, priority: Optional[PriorityEnum] = None, sort_by_due_date: bool = False):
     query = db.query(Task)
     
+    # if status is passed, then only query tasks with that status
     if status:
         query = query.filter(Task.status == status)
     
+    # if priority is passed, then only query tasks with that priority
     if priority:
         query = query.filter(Task.priority == priority)
         
+    # if priority is passed as true, then order the tasks by due date (ascending order wrt date)
     if sort_by_due_date:
         query = query.order_by(Task.due_date)
         
+    # return the tasks based on skip and limit(if given)
     return query.offset(skip).limit(limit).all()
 
+# create a task
 def create_task(db: Session, task: TaskCreate):
     db_task = Task(
         title=task.title,
@@ -30,18 +38,23 @@ def create_task(db: Session, task: TaskCreate):
         status=task.status,
         due_date=task.due_date
     )
-    db.add(db_task)
-    db.commit()
-    db.refresh(db_task)
+    db.add(db_task) #marks it to be inserted
+    db.commit() #actual execution of insertion
+    db.refresh(db_task) #reload addition data from db(with id and createdAt fields)
     return db_task
 
+# update a task with id with given details 
 def update_task(db: Session, task_id: int, task_update: TaskUpdate):
     db_task = db.query(Task).filter(Task.id == task_id).first()
     if db_task:
+        
+        # if priority is passed, update it
         if task_update.priority is not None:
             db_task.priority = task_update.priority
+        # if status is passed,  update it
         if task_update.status is not None:
             db_task.status = task_update.status
+
         db.commit()
         db.refresh(db_task)
         return db_task
@@ -86,7 +99,7 @@ def get_task_insights(db: Session):
         
     else:
         summary += "."
-    
+
     return {
         "total_tasks": total_tasks,
         "high_priority": high_priority_count,

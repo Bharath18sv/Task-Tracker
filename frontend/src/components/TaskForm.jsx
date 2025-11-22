@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { taskApi } from "../api";
 
-const TaskForm = ({ onTaskAdded }) => {
+const TaskForm = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -22,7 +22,10 @@ const TaskForm = ({ onTaskAdded }) => {
     e.preventDefault();
 
     try {
-      // Convert due_date to proper format if needed
+      // Convert due_date to ISO format 
+      // 2025-11-10T00:00:00.000Z(ISO 8601 format)
+      // here T seperates date and time, Z represent UTC : Coordinated universal time
+      // IST is 5hr 30 mins ahead of UTC, so if we store the raw data corresponding to country's time, we'll get errors .
       const taskData = {
         ...formData,
         due_date: formData.due_date
@@ -31,7 +34,6 @@ const TaskForm = ({ onTaskAdded }) => {
       };
 
       const response = await taskApi.createTask(taskData);
-      if (onTaskAdded) onTaskAdded(response.data);
 
       // Reset form
       setFormData({

@@ -1,4 +1,4 @@
-# Task Tracker with Smart Insights
+   # Task Tracker with Smart Insights
 
 A full-stack web application for task management with smart insights, built with FastAPI (Python) for the backend and React (Vite) for the frontend.
 
